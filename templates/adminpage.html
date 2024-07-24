@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block titleheading %} Administration Panel {% endblock titleheading %}</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+
+
+
+<style>
+    body {
+        {% comment %} font-family: Arial, sans-serif; {% endcomment %}
+    }
+    .header {
+        text-align: center;
+        padding: 10px;
+        background-color: #8B4513;
+        color: #fff;
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        background-color: #f8f9fa;
+        padding-top: 60px;
+    }
+    .sidebar ul {
+        list-style-type: none;
+        padding-top:50px;
+    }
+    .sidebar li {
+        margin-bottom: 10px;
+        margin-left: 0px;
+    }
+    .sidebar a {
+        display: block;
+        padding-left: 40px;
+        color: #333;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+    .sidebar a:hover {
+        background-color: #0056b3;
+        color:white;
+    }
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+        
+  
+    }
+
+    #logo{
+        width:100px;
+        height:100px;
+        margin-left:50px;
+    }
+
+    .company-title {
+        font-family: 'Pacifico', cursive; 
+        font-size: 50px; 
+        color: white; 
+        padding-left:100px;
+        padding-top:10px; 
+
+        
+        }
+
+    #navbar-icon{
+        margin-left:0px;
+        margin-right :10px;
+    }
+
+    {% block css %}
+    {% endblock css %}
+</style>
+</head>
+<body>
+<div class="header">
+    <h1 class="company-title">Maimoon Traders</h1>
+</div> 
+<div class="sidebar">
+    <img src='/media/logo/main_logo.png' alt='img' id='logo'/>
+    <ul class="nav flex-column">
+        
+        <li class="nav-item"><a class="nav-link" href={% url 'admin_dashboard' %}><i class="fas fa-home" id='navbar-icon'></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link"  href={% url 'uploadphoto' %}><i class="fas fa-upload" id='navbar-icon'></i>Store Product</a></li>
+        <li class="nav-item"><a class="nav-link" href={% url 'admin_sales_page' %}><i class="fas fa-chart-line" id='navbar-icon'></i>Sales Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href={% url 'admin_ProductList' %}><i class="fas fa-box-open" id='navbar-icon'></i>Products Report</a></li>
+        <li class="nav-item"><a class="nav-link" href={% url 'admin_salesreport' %}><i class="fas fa-chart-bar" id='navbar-icon'></i>Sales Report </a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'websiteorders' %}" target="_blank"><i class="fas fa-bell" id='navbar-icon'></i>Website Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'homepage' %}"><i class="fas fa-globe" id='navbar-icon'></i>Website</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'signout' %}"><i class="fas fa-sign-out-alt" id='navbar-icon'></i>Sign out</a></li>
+       
+        <!-- Add more navbar items as needed -->
+    </ul>
+</div>
+<div class="content">
+    <!-- Content will be loaded dynamically here -->
+    {% block heading %}
+    {% endblock heading %}
+
+    {% block main_content %}
+    {% endblock main_content %}
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

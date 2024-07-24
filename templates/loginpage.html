@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel='icon' href='/media/favicon/logo.png' type="image/png">
+<title>Login Page</title>
+<style>
+    html ,body {
+        font-family: Arial, sans-serif;
+        background-image: url('/media/logo/loginpageimage.jpg'); /* Add your background image URL here */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: 100%;
+
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9); 
+        border-radius: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        right: 190px; 
+        top: 50%;
+        {% comment %} transform: translateY(-50%); {% endcomment %}
+        animation: slide-in 1s ease-out forwards;
+    }
+
+    @keyframes slide-in {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(-50%);
+            opacity: 1;
+        }
+    }
+
+
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333333;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555555;
+    }
+
+   
+
+    .form-group input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 1px solid #dddddd;
+        border-radius: 7px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #8B4513;
+        box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #232f3e;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+    background-color: #8B4513;
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: inset 5px 7px 3px rgba(62, 39, 35, 0.3);
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+
+    #login-icon {
+        margin-right: 10px;
+    }
+
+    .form-group .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .form-group .password-container input {
+        width: calc(100% - 20px);
+        padding-right: 10px;
+    }
+
+    .form-group .password-container .toggle-password {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+
+
+    .header {
+        background-color: rgba(62, 39, 35, 1);
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .logo {
+        display: inline-block;
+        width: 50px; 
+        height: 50px; 
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    .company-name {
+        font-size: 28px;
+        font-family: 'Pacifico', cursive;
+        vertical-align: middle;
+    }
+</style>
+</head>
+<body>
+
+   
+
+
+
+
+
+    <header class="header">
+    <img src="/media/logo/main_logo.png" alt="Company Logo" class="logo">
+    <span class="company-name">Maimoon Traders</span>
+</header>
+
+<div class="container">
+
+     {% if error_message %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            {{ error_message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+            
+        </div>
+    {% endif %}
+
+    {% if message %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+        </div>
+    {% endif %}
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email"><i class="fas fa-envelope" id='login-icon'></i>Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock" id='login-icon'></i>Password</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePassword('password')">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <br>
+        <a href='/signup/' style='text-decoration:none; padding-top:10px; color:black'>Don't Have Account? <u>Sign in</u></a> 
+    </form>
+</div>
+
+<script>
+    function togglePassword(id) {
+        var input = document.getElementById(id);
+        var icon = input.nextElementSibling.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('close')) {
+            event.target.parentElement.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

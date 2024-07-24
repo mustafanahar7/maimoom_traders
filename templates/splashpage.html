@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <title>Splash Page</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .splash-container {
+            text-align: center;
+            opacity: 0;
+            animation: fadeInScale 1.5s forwards, fadeOut 1s 2s forwards;
+        }
+
+        .splash-logo {
+            width: 200px;
+            height: auto;
+            animation: logoBounceIn 1.5s ease-out;
+        }
+
+        .splash-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+            animation: messageSlideIn 1.5s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes logoBounceIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes messageSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <img src="/media/logo/main_logo.png" alt="Logo" class="splash-logo">
+        <div class="splash-message">Welcome to Maimoon Traders</div>
+    </div>
+
+    <script>
+        // Redirect to main page after 3 seconds
+        setTimeout(function() {
+            window.location.href = "/home/"; // Replace with your main page URL
+        }, 3000);
+    </script>
+</body>
+</html>

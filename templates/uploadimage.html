@@ -1,0 +1,319 @@
+{% extends 'adminpage.html' %}
+
+<!DOCTYPE html>
+<html>
+    
+<head>
+    {% block titleheading %}Product Inventory{% endblock titleheading %}
+
+    {% block css %}
+
+        body{
+            background-image: url('/media/images/admin-bg.jpg');
+            background-size: cover; /* This will make the image cover the entire background */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            opacity: 1;
+            z-index:0;
+        }
+            
+        h1 {
+            margin-bottom: 20px;
+        }
+
+       .form-container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+    
+        .form-container label {
+            font-weight: bold;
+        }
+
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            flex: 0 0 150px;
+            margin-bottom: 0;
+            font-weight: bold;
+            color: #555555;
+        }
+        .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        } 
+
+        .form-container input:focus{
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+        }
+
+        .form-container textarea:focus{
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+        }
+
+        .form-container button{
+            background-color: #232f3e;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .form-container button:hover {
+                
+            background-color: #8B4513;
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: inset 5px 7px 3px rgba(62, 39, 35, 0.3);
+        
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        #uploadproductheading {
+            font-family: Courier New;
+        }
+
+        .header{
+            margin:0px;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+            }
+
+        .toggle-container {
+        position: relative;
+        display: inline-block;
+        width: 35px;
+        height: 25px;
+        }
+
+        .toggle {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+        }
+
+        .toggle::before {
+        content: '';
+        position: absolute;
+        height: 16px;
+        width: 16px;
+        background-color: #fff;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        input[type="checkbox"] {
+        visibility: hidden;
+        }
+
+        input[type="checkbox"]:checked + .toggle::before {
+        transform: translateX(20px) translateY(-50%);
+        background-color: #333;
+        }
+
+        .char-count {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 12px;
+        color: #999;
+        background-color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+{% endblock css%}
+        
+</head>
+
+<body>
+     
+    
+    {% block main_content %}
+        {% if error_message %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    {{ error_message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+            </div>
+        {% endif %}
+
+
+    
+    <div class="form-container">
+        <form id='uploadForm' method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1 id='uploadproductheading'>Upload Product</h1>
+
+            <div class="form-group">
+                <label for="code">Product Code:</label>
+                <input type="text" class="form-control" id="code" name="code">
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="type">Product Type:</label>
+                <select class="form-control" id="type" name="type">
+                    <option value="">Select</option>
+                    <option value="Ohbat">Ohbat</option>
+                    <option value="Shadi">Shadi</option>
+                    <option value="Home Function">Home Function</option>
+                    
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Product Category:</label>
+                <select class="form-control" id="category" name="category">
+                    <option value="">Select</option>
+                    <option value="soft">Soft</option>
+                    <option value="fabric">Fabric</option>
+                    <option value="cotton">Cotton</option>
+                    
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity">Roll Quantity:</label>
+                <input type="text" class="form-control" id="quantity" name="quantity">
+            </div>
+
+            <div class="form-group">
+                <label for="qty_sqft">Sq foot:</label>
+                <input type="text" class="form-control" id="qty_sqft" name="qty_sqft">
+            </div>
+
+            <div class="form-group">
+                <label for="image">Image:</label>
+                <input type="file" class="form-control-file" id="image" name="image">
+            </div>
+
+            <div class="form-group" style="position: relative;">
+                <label for="description">Description:</label>
+                <textarea type="text" class="form-control" id="description" name="description" rows="3" maxlength="50"></textarea>
+                <div id="charCount" class="char-count">50</div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="sale_price">Selling Price:</label>
+                <input type="text" class="form-control" id="sale_price" name="sale_price">
+            </div>
+            <div class="form-group">
+                <label for="cost">Cost:</label>
+                <input type="text" class="form-control" id="cost" name="cost">
+            </div>
+            <div class="form-group">
+                <label for="godown">Select Godown:</label>
+                <select class="form-control" id="godown" name="godown">
+                    <option value="Main">Main</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="showConfirmationPopup()">Upload</button>
+        </form>
+
+        <div class="toggle-container">
+            <input type="checkbox" id="darkModeToggle">
+            <label for="darkModeToggle" class="toggle"></label>
+        </div>
+    </div>
+
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        });
+       
+        document.addEventListener('DOMContentLoaded', (event) => {
+        const textarea = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+        const maxLength = textarea.getAttribute('maxlength');
+
+        textarea.addEventListener('input', () => {
+            const remaining = maxLength - textarea.value.length;
+            charCount.textContent = remaining;
+        });
+    });
+
+     function showConfirmationPopup() {
+                Swal.fire({
+                title: 'Confirm purchase',
+                text: 'Are you sure you want to proceed with this Purchase?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form when the user confirms
+                    document.getElementById('uploadForm').submit();
+                }
+                });
+            }
+
+    </script>
+
+    
+    {% endblock main_content %}
+</body>
+</html>

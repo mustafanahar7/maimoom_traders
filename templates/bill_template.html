@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<title>Bill</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    {% comment %} background-color: #f5f5f5; {% endcomment %}
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.company-logo {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.company-name {
+    font-size: 28px;
+    font-weight: bold;
+    text-align:right;
+}
+
+.bill-details {
+    margin-bottom: 20px;
+}
+
+.bill-details h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.bill-details p {
+    margin: 5px 0;
+}
+
+.disclaimer {
+    font-size: 12px;
+    color: #666;
+    margin-top: 20px;
+}
+
+.footer {
+    margin-top: 30px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.total-amount {
+    font-weight: bold;
+}
+
+.print-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    top:20px;
+    right:30px;
+    
+}
+
+.print-button:hover {
+    background-color: #0056b3;
+    color:white;
+    text-decoration:none;
+}
+
+#invoice-heading{
+    text-align:center;
+}
+
+.date-container{
+    display: inline; 
+    float:right;
+    margin-right:70px;
+}
+
+@media print {
+    .print-button {
+        display: none;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <a href="javascript:void(0)" onclick="window.print()" class="print-button"><i class="fas fa-print"></i></a>
+    <div class="header">
+        <img src='https://seeklogo.com/images/M/mt-logo-158D9F5A5E-seeklogo.com.png' alt='img' class='company-logo'/>
+        <h1 class="company-name">Maimoon Traders</h1>
+    </div>
+
+    <div class="date-container">
+            <p  class="invoice-date"><strong>Date - </strong>{{ sales_data.0.date }}</p>
+    </div>
+        <br>
+        <br>
+        <br>
+    <div class="bill-details">
+        <h3 id='invoice-heading'>Sales Invoice</h3>
+
+        <p><strong>Customer Name:</strong> {{ sales_data.0.customer_name }}</p>
+        <p><strong>Address:</strong> {{ sales_data.0.customer_address }}</p>
+        <p><strong>Mobile Number:</strong> {{ sales_data.0.customer_contact }}</p>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Gross Amount</th>
+                    <th>Net Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in sales_data%}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.unit_price }}</td>
+                    <td>{{ item.discount }} %</td>
+                    <td>{{ item.total }} </td>
+                    <td>{{ item.final_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="total-amount"><strong>Total Amount:</strong> {{ total_amount }}</p>
+    </div>
+
+    <div class="disclaimer">
+        <p><strong>Disclaimer:</strong> This is a computer-generated document and does not require a signature.</p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Contact Information:</strong></p>
+        <p><strong>Phone:</strong> +91 9116426352</p>
+        <p><strong>Email:</strong> maimoontrader@gmail.com</p>
+        <p><strong>Address:</strong> 123 Shastri Colony, Near Bhumi Vikas Bank, Dungarpur Rajasthan</p>
+    </div>
+
+    
+</div>
+
+</body>
+</html>

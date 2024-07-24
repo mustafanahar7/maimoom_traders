@@ -1,0 +1,125 @@
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.cart-container {
+  
+    max-width: 1200px;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+    margin: 100px auto;
+        
+    
+
+}
+
+
+
+h1 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* .cart-item:hover {
+    background-color: #e3f2fd;
+} */
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cart-item:hover .item-image {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 1.4em;
+    color: #333333;
+    margin: 0;
+    font-weight: bold;
+}
+
+.item-description {
+    font-size: 1em;
+    color: #666666;
+    margin: 5px 0 0;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.item-quantity label {
+    margin-right: 10px;
+    font-size: 1em;
+    margin-right: 20px;
+    color: black;
+}
+
+.quantity-input {
+    width: 40px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.item-total-price {
+    font-size: 1.4em;
+    color: #339e0f;
+    font-weight: bold;
+}
+
+.total-price {
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid #e9ecef;
+}
+
+.total-price h2 {
+    color: #333333;
+    font-size: 1.8em;
+    margin: 0;
+}
+

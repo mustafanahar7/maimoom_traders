@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <script defer src="{% static 'js/cart.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+    <style>
+        .delete-button {
+        background: none;
+        border: none;
+        color: #ff0000;
+        cursor: pointer;
+        font-size: 1.5em;
+        transition: color 0.3s, transform 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 0, 0, 0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-left:10px;
+    }
+
+    .delete-button:hover {
+        color: #cc0000;
+        transform: scale(1.1);
+        background-color: rgba(255, 0, 0, 0.2);
+    }
+
+    .delete-button i {
+        pointer-events: none; /* Prevent the icon from blocking button click events */
+    }
+
+    .customer-details {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .customer-details h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+    </style>
+
+    
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Shopping Cart</h1>
+
+        <form id="purchase-form" method="POST" action="{% url 'cart' %}">
+            {% csrf_token %}
+            
+            {% for product in cart_products %}
+            <div class="cart-item" id="cart-item-{{ product.product_code }}">
+                <img src="/media/{{ product.product_image }}" alt="{{ product.product_name }}" class="item-image">
+                <div class="item-details">
+                    <h2 class="item-name">{{ product.product_name }}</h2>
+                    <p class="item-description">{{ product.product_description }}</p>
+                </div>
+                <div class="item-quantity">
+                    <label for="quantity-{{ forloop.counter }}"><b>Quantity:</b></label>
+                    <input type="number" id="quantity-{{ forloop.counter }}" name="quantity_{{ product.product_code }}" min="0.5" step="0.5" value="1" class="quantity-input" data-price="{{ product.selling_price_sqft }}">
+                </div>
+                <div class="item-total-price">{{ product.selling_price_sqft }}</div>
+                <!-- Delete Button -->
+                <button type="button" class="delete-button" data-product-code="{{ product.product_code }}">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <!-- Include hidden fields for product details -->
+                <input type="hidden" name="product_code_{{ product.product_code }}" value="{{ product.product_code }}">
+                <input type="hidden" name="product_name_{{ product.product_code }}" value="{{ product.product_name }}">
+                <input type="hidden" name="product_description_{{ product.product_code }}" value="{{ product.product_description }}">
+                <input type="hidden" name="selling_price_sqft_{{ product.product_code }}" value="{{ product.selling_price_sqft }}">
+                <input type="hidden" name="product_image_{{ product.product_code }}" value="{{ product.product_image }}">
+      
+            </div>
+            {% endfor %}
+            
+            <div class="total-price">
+                <h3>Total Amount: <span id="grand-total">0.00</span></h3>
+            </div>
+
+           <div class="customer-details">
+                <h2>Customer Details</h2>
+                <div class="form-group">
+                    <label for="customer-name">Name:</label>
+                    <input type="text" id="customer-name" name="customer_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Email:</label>
+                    <input type="email" id="customer-email" name="customer_email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">Phone:</label>
+                    <input type="tel" id="customer-phone" name="customer_phone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="shipping-address">Shipping Address:</label>
+                    <textarea id="shipping-address" name="shipping_address" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="pincode">Pin Code:</label>
+                    <input type="text" id="pincode" name="pincode" class="form-control" required>
+                </div>
+            </div>
+
+            <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+            <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+            <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+
+
+            <div class="purchase-button-container">
+                <button class="purchase-button" type='submit' value='place_order'>Place Order</button>
+                <button id="rzp-button1" class="purchase-button" value='pay'>Pay</button>
+            </div>
+        </form>
+    
+    </div>
+    
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+    var options = {
+    "key": "rzp_test_N3dz2847QcKLEl", // Enter the Key ID generated from the Dashboard
+    "amount": "{{ total_payment_amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Maimoon Traders",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{ payment_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+      document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+      document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+      document.getElementById('razorpay_signature').value = response.razorpay_signature;    
+     
+    },
+
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+        
+  
+    }
+</script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+  // Function to remove item from cart via AJAX
+  function removeFromCart(productCode) {
+    fetch(`/cart/remove/${productCode}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to remove item from cart.');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.status === "success") {
+        // Remove the cart item element from the DOM
+        document.getElementById(`cart-item-${productCode}`).remove();
+        // Update the total price dynamically
+        updateTotalPrice();
+      } else {
+        console.error("Failed to remove item from cart:", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  }
+
+  // Function to update total price based on current cart items
+  function updateTotalPrice() {
+    const quantityInputs = document.querySelectorAll(".quantity-input");
+    const grandTotalElement = document.getElementById("grand-total");
+    let grandTotal = 0;
+
+    quantityInputs.forEach((input) => {
+      const price = parseFloat(input.getAttribute("data-price"));
+      const quantity = parseFloat(input.value);
+      const itemTotalPrice = price * quantity;
+      input.closest(".cart-item").querySelector(".item-total-price").textContent = `${itemTotalPrice.toFixed(2)}`;
+      grandTotal += itemTotalPrice;
+    });
+
+    grandTotalElement.textContent = `${grandTotal.toFixed(2)}`;
+  }
+
+  // Event listener for delete buttons
+  document.querySelectorAll(".delete-button").forEach((button) => {
+    button.addEventListener("click", function () {
+      const productCode = this.getAttribute("data-product-code");
+      removeFromCart(productCode);
+    });
+  });
+
+  // Event listener for quantity inputs
+  document.querySelectorAll(".quantity-input").forEach((input) => {
+    input.addEventListener("input", updateTotalPrice);
+  });
+
+  // Initialize total price on page load
+  updateTotalPrice();
+
+});
+
+ </script>
+</body>
+</html>

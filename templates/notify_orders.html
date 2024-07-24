@@ -1,0 +1,175 @@
+<!-- notify_orders.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notify Orders</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for adjusting column width */
+        .item-column {
+            width: 30%; /* Adjust width as needed */
+        }
+        
+        /* General styling for body and headings */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light gray background */
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333; /* Dark text color */
+        }
+
+        /* Table and scrollbar styles */
+        .table-responsive {
+            max-height: 600px; /* Set maximum height for scrollable table */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        .table th, .table td {
+            text-align: center; /* Center align table cells */
+            vertical-align: middle; /* Middle align table cells */
+            
+        }
+
+        /* Sticky header for main table */
+        #main_table_heading th {
+            position: sticky;
+            top: 0;
+            background-color: #343a40; /* Dark background color */
+            color: white; /* White text color */
+            z-index: 1000;
+        }
+
+        /* Custom scrollbar styles for WebKit browsers */
+        .table-responsive::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 6px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Custom scrollbar styles for Firefox */
+        .table-responsive {
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+
+        /* Button styles */
+        .btn-accepted {
+            background-color: #28a745; /* Green background for accepted button */
+            color: white; /* White text color */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="my-4">Website Orders</h1>
+
+        <div class="table-responsive">
+            {% if orders %}
+                <table class="table table-striped">
+                    <thead class="thead-dark" id='main_table_heading'>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Order Date</th>
+                            <th>Customer Name</th>
+                            <th>Customer Email</th>
+                            <th>Customer Phone</th>
+                            <th>Address</th>
+                            <th>Pin Code</th>
+                            <th>Total Amount</th>
+                            <th>Items</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.order_number }}</td>
+                                <td>{{ order.created_at }}</td>
+                                <td>{{ order.customer_name }}</td>
+                                <td>{{ order.customer_email }}</td>
+                                <td>{{ order.customer_phone }}</td>
+                                <td>{{ order.address }}</td>
+                                <td>{{ order.pin_code }}</td>
+                                <td>{{ order.total_amount }}</td>
+                                <td>
+                                    <table class="table table-striped">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Qty</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item_key, item_value in order_items.items %}
+                                                {% if item_key == order %}
+                                                    {% for order_item in item_value %}
+                                                        <tr>
+                                                            <td>{{ order_item.product_code_id }}</td>
+                                                            <td>{{ order_item.qty }}</td>
+                                                            <td>{{ order_item.selling_price }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="acceptOrder(this, {{ order.order_number }})">Accept Order</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <strong>No orders found.</strong>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function acceptOrder(button, orderId) {
+            fetch(`?accept_order_id=${orderId}`, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        button.textContent = 'Accepted';
+                        button.classList.remove('btn-danger');
+                        button.classList.add('btn-accepted');
+                        button.disabled = true;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

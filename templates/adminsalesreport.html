@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        
+        #image{
+            width:50px;
+            height:50px;
+        }
+
+        .download-button{
+            margin-top:20px;
+            position: absolute;
+            top:20px;
+            right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class='download-button'>
+        <a class="btn btn-info" href="{% url 'admin_dashboard' %}">Back</a>
+        <a href="{% url 'admin_salesreport' %}?download=xlsx" class="btn btn-outline-info" name='download'><i class="fas fa-download"></i></a>
+        </div>
+        
+        <h1 class="my-4">Sales Report</h1>
+    <div class='table-responsive'>
+        <table class="table table-striped">
+            <thead class='thead-dark'>
+                <tr>
+                    <th>Sale Date </th>
+                    <th>Order Number </th>
+                    <th>Customer Name</th>
+                    <th>Customer Address</th>
+                    <th>Customer Mobile Number</th>
+                    <th>Total Bill Price</th>
+                    
+
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for sales_report in report %}
+                <tr>
+                    <td>{{ sales_report.created_at }}</td>
+                    <td>{{ sales_report.order_number }}</td>
+                    <td>{{ sales_report.customer_name }}</td>
+                    <td>{{ sales_report.address }}</td>
+                    <td>{{ sales_report.customer_phone }}</td>
+                    <td>{{ sales_report.total_amount }}</td>
+
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>  
+    </div>
+    
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

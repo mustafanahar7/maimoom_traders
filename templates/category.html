@@ -1,0 +1,219 @@
+{% extends 'dashboard_navbar.html' %}
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Categories{% endblock title %}</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <style>
+    {% block css %}
+    
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Responsive CSS */
+        @media (max-width: 768px) {
+            .sidebar {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 10px;
+            }
+        }
+
+        
+
+            
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .card img:hover{
+            transform: scale(0.9);
+            border-radius:20px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 500px;
+            margin-bottom: 20px;
+        
+        }
+        .card-button {
+            display: block;
+            width: 100%;
+            padding: 5px 0;
+            text-align: center;
+            background-color: #f90;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        .card-button:hover {
+            background-color: #ff7b00;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .card-content {
+            padding: 10px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .card-type {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+
+        .card-desc {
+            font-size: 11px;
+        }
+        #main{
+            margin-top:20px;
+            bottom:10px;
+
+        }
+
+        .list-group-item a{
+            color:#006CA5;    
+        }
+
+        .list-group-item a:hover{
+            text-decoration:none;
+            font-size:18px;
+        }
+        .list-group-item a.active {
+            font-weight: bold; /* Example style for active link */
+        }
+
+        .category-div{
+            padding-top:100px;
+            
+        }
+
+        .card-button {
+            display: block;
+            {% comment %} position: absolute;
+            bottom: 10px; {% endcomment %}
+            width: 60%;
+            padding: 3px 0; 
+            text-align: center;
+            background-color: #f90;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 25px;
+            margin: 15px 10px; 
+            box-shadow:  0 2px 4px rgba(0, 0, 0, 0.2);
+            line-height: 1.7 ;
+            font-size:14px;
+
+            }
+
+        .card-button:hover {
+            background-color: #ff7b00;
+            text-decoration: none;
+            color: #fff;
+            box-shadow: inset  0 2px 4px rgba(0, 0, 0, 0.2);
+            
+            }
+
+    
+
+        {% endblock css %}
+    </style>
+</head>
+
+
+{% block content %}
+<body >
+
+    <div class='category-div'>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <h2>Categories</h2>
+                    {% if list_of_cat %}
+                        <ul class="list-group">
+                            <li class="list-group-item"><a href="{% url 'categorypage' %}" class="{% if not active_category %}active{% endif %}">All Products</a></li>
+                            {% for category in list_of_cat %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'category_filter' category %}">{{ category  | capfirst}}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No categories available</p>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+    {% if products %}
+    <div class="col-md-9" id='main'>
+        <div class="container">
+            <div class="row" , id='main_row'>
+                {% for product in products %}
+                <div class="col-lg-4 col-md-6 mb-6" >
+                    <div class="card">
+                        <img src="/media/{{ product.product_image }}" class="card-img-top" alt="{{ product.product_name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.product_name }}</h5>
+                            <p class="card-desc">{{ product.product_description }}</p>
+                            <h4> &#8377 {{ product.selling_price_sqft }} sq/ft</h4>
+                            <a href="/cart/{{ product.product_code}}" class="card-button">Add to Cart</a> 
+                            {% comment %} <a href="#" class="card-button">Add to Cart</a> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    </div>
+    </div>
+
+</div>
+
+
+
+            
+
+    <!-- Bootstrap JavaScript (Optional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+
+    {% include "footer.html" %} 
+</body>
+{% endblock content %}
+</html>

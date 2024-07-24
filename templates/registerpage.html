@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+<link rel='icon' href='/media/favicon/logo.png' type="image/png">
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url('/media/logo/loginpageimage.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .header {
+        background-color: rgba(62, 39, 35, 1);
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .logo {
+        display: inline-block;
+        width: 50px; 
+        height: 50px; 
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    .company-name {
+        font-size: 28px;
+        font-family: 'Pacifico', cursive;
+        vertical-align: middle;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        animation: slide-in 1s ease-out forwards;
+    }
+
+    @keyframes slide-in {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(-3%);
+            opacity: 1;
+        }
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333333;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        flex: 0 0 150px;
+        margin-bottom: 0;
+        font-weight: bold;
+        color: #555555;
+    }
+
+    .form-group .password-container {
+        position: relative;
+        width: 100%;
+    }
+
+    .form-group .password-container input {
+        width: calc(100% - 40px);
+        padding-right: 30px;
+    }
+
+    .form-group .password-container .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .form-group input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        border-radius:7px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #8B4513;
+        box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #232f3e;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+    background-color: #8B4513;
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: inset 5px 7px 3px rgba(62, 39, 35, 0.3);
+    }
+
+    .alert {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        color: #0056b3;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: #232f3e;
+    }
+</style>
+</head>
+<body>
+
+<header class="header">
+    <img src="/media/logo/main_logo.png" alt="Company Logo" class="logo">
+    <span class="company-name">Maimoon Traders</span>
+</header>
+
+
+
+<div class="container">
+    {% if error_message %}
+        <div class="alert alert-danger alert-dismissible"  role="alert">
+            {{ error_message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+        </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="True">&times;</span></button>
+
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+    <h2>Registration Form</h2>
+    <form id="registration-form" method="POST" action="/signup/" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="first_name" required>
+        </div>
+        <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="last_name" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="profile">Email</label>
+            <input type="file" id="profile" name="profile" class="form-control-file">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePassword('password')">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="conf-password">Confirm Password</label>
+            <div class="password-container">
+                <input type="password" id="conf-password" name="conf_password" required>
+                <span class="toggle-password" onclick="togglePassword('conf-password')">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <a href="/signin/" style='text-decoration:none; padding-top:10px; color:black'>Already have an account? <u>Login</u></a>
+    </form>
+</div>
+
+<script>
+    function togglePassword(id) {
+        var input = document.getElementById(id);
+        var icon = input.nextElementSibling.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+
+</body>
+</html>

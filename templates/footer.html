@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <style>
+        /* Footer Styles */
+        footer {
+            background-color: #333; 
+            color: #fff;
+            padding: 40px 0;
+            box-shadow: 0 -7px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px; /* Maximum width of the footer content */
+            margin: 0 auto; /* Center the footer horizontally */
+        }
+
+        .footer-content {
+            flex: 1;
+            margin-bottom: 10px; /* Space between footer sections */
+        }
+
+        .footer-content h2, .footer-content h3 {
+            margin-bottom: 10px;
+            font-size: 24px; 
+        }
+
+        .footer-content p, .footer-content ul li a {
+            margin-bottom: 10px;
+            font-size: 16px; 
+        }
+
+        .footer-content ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            gap: 20px; /* Increased space between icons */
+        }
+
+        .footer-content ul li {
+            margin-bottom: 5px;
+        }
+
+        .footer-content ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        
+
+
+
+.footer-content ul  li a {
+    text-decoration: none;
+    font-size: 32px; /* Increased icon size */
+    transition: color 0.3s ease;
+}
+
+.footer-content a:hover {
+    color: #007bff; /* Hover color */
+}
+
+
+
+        .footer-form input[type="email"], .footer-form input[type="text"], .footer-form input[type="tel"], .footer-form textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #fff;
+            margin-bottom: 10px;
+            width: calc(100% - 22px); /* Adjust input width to account for padding and border */
+        }
+
+        .footer-form textarea {
+            resize: vertical;
+            height: 100px; /* Adjust height for textarea */
+        }
+
+        .footer-form button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: orange; /* Button background color */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer-form button:hover {
+            background-color: #ff7b00; /* Darker color on hover */
+            box-shadow: inset  0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-map {
+            flex: 1;
+            margin-left: 20px;
+            margin-right:500px;
+        }
+
+        .map-iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #555; /* Add a top border for separation */
+            margin-top: 20px; /* Space between main content and bottom line */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .footer-content, .footer-map {
+                flex-basis: 100%;
+                margin-left: 0;
+            }
+
+            .footer-form {
+                text-align: center;
+            }
+
+            .footer-form input[type="email"], .footer-form input[type="text"], .footer-form input[type="tel"], .footer-form textarea {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Your page content -->
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <h2>Contact Us</h2><br>
+                <p>Email: maimoontraders@gmail.com</p>
+                <p>Phone: +919116426352</p>
+                <p>Address: 92 Shastri Colony, Dungarpur, India</p>
+            </div>
+            <div class="footer-content">
+                <h2>Follow Us</h2><br>
+                <ul>
+                    <li><a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a></li>
+                    <li><a href="https://www.instagram.com/maimoon.carpet?igsh=MXMzcjN1d2Npd3Y2OQ==" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-content">
+                <h2>Query Form</h2><br>
+                <form class="footer-form" method="POST" action="{% url 'queryform_data' %}">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="text" name="phone" placeholder="Your Phone Number" required>
+                    <textarea name="message" placeholder="Your Message" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+        {% comment %} <div class="footer-map">
+            <h3>Location</h3>
+            <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7298.474583047523!2d73.71765991423445!3d23.845706177089863!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396771dd1e70f395%3A0xd2cf46e95bf62eea!2sShastri%20Colony%2C%20Dungarpur%2C%20Rajasthan%20314001!5e0!3m2!1sen!2sin!4v1716813096745!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div> {% endcomment %}
+
+        <div class="footer-bottom">
+            &copy; 2024 Maimoon Traders. All Rights Reserved.
+        </div>
+
+        
+    </footer>
+</body>
+</html>

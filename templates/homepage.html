@@ -1,0 +1,274 @@
+{% extends "dashboard_navbar.html" %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+    
+<title>{% block title %}Home{% endblock title %}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% block links %}<link rel='icon' href='/media/favicon/logo.png' type="image/png">{% endblock links %}
+{% block css %}
+<style>
+
+body {
+  font-family: Arial, sans-serif;
+  
+}
+
+.homepage{
+  padding-top:50px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 50px auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.card img:hover {
+    transform: scale(0.9);
+    border-radius:20px;
+}
+
+.card-content {
+  padding: 10px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card-type {
+  font-size: 14px;
+  {% comment %} font-weight: bold; {% endcomment %}
+}
+
+
+.card-desc{
+  font-size:12px;
+}
+
+.card-button {
+  display: block;
+  {% comment %} position: absolute;
+  bottom: 10px; {% endcomment %}
+  width: 60%;
+  padding: 3px 0; 
+  text-align: center;
+  background-color: #f90;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 25px;
+  margin: 15px 10px; 
+  box-shadow:  0 2px 4px rgba(0, 0, 0, 0.2);
+  line-height: 1.7 ;
+  font-size:14px;
+
+}
+
+.card-button:hover {
+  background-color: #ff7b00;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: inset  0 2px 4px rgba(0, 0, 0, 0.2);
+ 
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust columns for smaller screens */
+  }
+}
+
+
+.slideshow-container {
+    max-width: 100%;
+    {% comment %} position: relative; {% endcomment %}
+    margin-top: 40px; /* Adjust as needed */
+    
+}
+
+/* Slides */
+.mySlides {
+    display: none;
+    width: 100%;
+    animation: fadeAnimation 1s ease-in-out;
+}
+
+/* Keyframes for the fade animation */
+@keyframes fadeAnimation {
+    from {
+        opacity: 0; /* Start with opacity 0 (hidden) */
+    }
+    
+    to {
+        opacity: 1; /* End with opacity 1 (fully visible) */
+        
+    }
+  }
+
+.mySlides img {
+    width: 100%;
+    height: 400px; /* Adjust height as needed */
+    object-fit: cover;
+}
+
+
+
+.slider-text {
+    position: absolute;
+    top: 50%;
+    left: 80%;
+    transform: translate(-50%, -50%); 
+    z-index: 1; /* Ensure text appears above the image */
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    display:block;
+    {% comment %} background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */ {% endcomment %}
+    padding: 10px 20px;
+}
+.popup-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: slideIn 0.5s ease-out, fadeOut 3s 1s ease-out forwards;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translate(-50%, -150%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+</style>
+{% endblock css %}
+</head>
+
+
+{% block content %}
+<body>
+    
+  <div class='homepage'>
+          <div class="slideshow-container">
+            {% if images %}
+            {% for img,msg in images %}
+              <div class="mySlides">
+                  <img src="/media/slider_images/{{img}}" alt="Slide 1">
+                  <div class="slider-text">{{msg}}</div>
+              </div>
+              {% endfor %}
+              {% endif %}
+          </div>
+
+          {% for message in message_list %}
+              <div class="popup-notification">
+                  {{ message }}
+              </div>
+          {% endfor %}
+        
+
+        {% if imagedata%}
+            
+            <div class="container">
+                {% for product in imagedata %}
+            <div class="card">
+                <img src="/media/{{product.product_image}}" alt="Product 1">
+                <div class="card-content">
+                <h3 class="card-title">{{product.product_name}}</h3>
+                <p class="card-desc">{{product.product_description}}</p>
+                <h4 class="card-type">{{product.product_type}}</h4>
+                <h4>&#8377 {{product.selling_price_sqft}} sq/ft</h4>
+                <a href="/cart/{{ product.product_code}}" class="card-button">Add to Cart</a> 
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+
+            {% if oos %}
+                <h1>{{oss}}</h1>
+            {% endif%}
+            
+
+        {% endif %}
+  </div>
+
+
+    <script>
+        var slideIndex = 0;
+
+        function showSlides() {
+            var i;
+            var slides = document.querySelectorAll('.mySlides');
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {
+                slideIndex = 1;
+            }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 3000); // Change slide every 2 seconds (adjust as needed)
+        }
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        showSlides(); // Start slideshow on page load
+
+    </script>
+    
+    {% include "footer.html" %} 
+    {% endblock content %}
+
+
+</body>
+
+</html>
+    

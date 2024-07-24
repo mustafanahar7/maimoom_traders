@@ -1,0 +1,240 @@
+{% extends 'adminpage.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    {% block titleheading %}Dashboard{% endblock titleheading %}
+    <!-- Include Chart.js and Chart.js Data Labels plugin -->
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> {% endcomment %}
+    
+    {% block css %}  
+        .c-container {
+            max-width: 1200px; /* Adjust container max-width as needed */
+            margin: 10px auto;
+            background-color:#fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            overflow: hidden; /* Prevent content overflow */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333; /* Darker text color */
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px; /* Adjust the gap between charts */
+            margin-top: 20px;
+            flex-wrap: wrap; /* Allow charts to wrap to new line */
+        }
+
+        .chart {
+            flex: 1 1 calc(50% - 20px); /* Adjust width to fit two charts in a row */
+            max-width: 100%; /* Ensure chart does not exceed container */
+            height: 400px; /* Fixed height for consistency */
+            border-radius: 8px;
+            box-shadow: 0 5px 9px rgba(0, 0, 0, 0.1);
+
+        }
+    {% endblock css %}
+</head>
+
+    {% block main_content %}
+    <div class="c-container">
+        <h1>Dashboard</h1>
+
+        <!-- Chart container for inventory pie chart and sales bar chart -->
+        <div class="chart-container">
+            <div class="chart">
+                <canvas id="inventoryPieChart"></canvas>
+                
+            </div>
+            <div class="chart">
+                <canvas id="salesBarChart"></canvas>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            async function fetchInventoryData() {
+                try {
+                    const response = await fetch('/api/inventory-data/');
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching inventory data:', error);
+                }
+            }
+
+            async function createInventoryChart() {
+                const data = await fetchInventoryData();
+                if (!data) {
+                    console.error('No data available');
+                    return;
+                }
+
+                // Create inventory pie chart
+                const inventoryCtx = document.getElementById('inventoryPieChart').getContext('2d');
+                new Chart(inventoryCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.categories,
+                        datasets: [{
+                            label: 'Inventory',
+                            data: data.inventories,
+                            backgroundColor: [
+                                'rgba(255, 50, 50, 1)', // Red with opacity
+                                'rgba(54, 162, 100, 1)', // Blue with opacity
+                                'rgba(255, 206, 86, 1)', // Yellow with opacity
+                                'rgba(75, 192, 192, 1)', // Green with opacity
+                                'rgba(153, 102, 255, 1)', // Purple with opacity
+                                'rgba(255, 159, 64, 1)' // Orange with opacity
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'left',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return `${context.label}: ${context.raw}`;
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Category-wise Inventory Distribution',
+                                position: 'top',
+                                font: {
+                                    size: 16
+                                },
+                                padding: {
+                                    top: 10,
+                                    bottom: 30
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Create sales bar chart
+                const salesCtx = document.getElementById('salesBarChart').getContext('2d');
+                new Chart(salesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.sales_date,
+                        datasets: [{
+                            label: 'Sales Count',
+                            data: data.sales_order_count,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Sales Distribution',
+                            position: 'top',
+                            font: {
+                                size: 16
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        datalabels: {
+                            anchor: 'center',
+                            align: 'center',
+                            color: 'black',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: function(value, context) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Date',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(200, 200, 200, 0.2)'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Sales',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+            }
+
+            createInventoryChart();
+        });
+    </script>
+    {% endblock main_content %}
+
+</html>
+
